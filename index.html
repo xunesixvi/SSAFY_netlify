@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ko" class="overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ 나의 차분한 아카이브 | 자기소개 ✨</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: 에디토리얼 명조(Noto Serif KR)와 정갈한 고딕(Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 아이콘 라이브러리 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // 💡 다크모드 대응을 위해 클래스 기반 다크모드 활성화
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: '#1E1E1C',       /* 피트 차콜 (기본 어두운 배경색) */
+                        charcoalLight: '#2C2C29',  /* 차콜보다 한 톤 밝은 차콜 (다크모드 카드용) */
+                        sand: '#F5F2EB',           /* 샌드 베이지 (기본 밝은 배경색) */
+                        sandLight: '#FAF8F5',      /* 샌드보다 한 톤 밝은 베이지 (라이트모드 카드용) */
+                        sandDark: '#E6E1D5',       /* 조금 더 어두운 베이지 */
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif KR"', 'serif'],
+                        sans: ['Inter', '"Noto Sans KR"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 화면을 가득 채우며 페이드 전환되는 효과 정의 */
+        .page-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: scale(0.98) translateY(10px);
+            z-index: 10;
+        }
+        
+        .page-section.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 20;
+        }
+
+        /* 스크롤바 숨기기 (내부 스크롤 대비) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 가로 슬라이드용 추가 트랜지션 */
+        #slides-wrapper {
+            will-change: transform;
+        }
+        .zoom-container { overflow: hidden; position: relative; cursor: zoom-in; }
+        .zoom-img { transition: transform 0.1s ease-out; transform-origin: center center; }
+        .zoom-container:hover .zoom-img { transform: scale(2); }
+        @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body class="bg-sand text-charcoal dark:bg-charcoal dark:text-sand font-sans selection:bg-charcoal selection:text-sand dark:selection:bg-sand dark:selection:text-charcoal overflow-hidden h-screen w-screen relative transition-colors duration-500">
+
+    <!-- 💡 [다크모드 토글 스위치] 좌측 상단 플로팅 테마 버튼 -->
+    <button onclick="toggleDarkMode()" class="fixed left-6 top-6 z-50 p-3 rounded-full bg-sandLight dark:bg-charcoalLight border border-charcoal/10 dark:border-white/10 shadow-lg text-charcoal dark:text-sand hover:scale-105 active:scale-95 transition-all duration-300" title="화면 테마 변경">
+        <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+        <i class="fa-solid fa-sun text-lg hidden dark:inline text-amber-400"></i>
+    </button>
+
+    <!-- 💡 오른쪽 사이드 도트 인디케이터 (세로 메인 섹션 네비게이션) -->
+    <div class="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
+        <button onclick="goToSection(0)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-charcoal dark:bg-sand transition-all duration-300" title="Intro"></button>
+        <button onclick="goToSection(1)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="About"></button>
+        <button onclick="goToSection(2)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Interests"></button>
+        <button onclick="goToSection(3)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Cozy Room"></button>
+        <button onclick="goToSection(4)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Contact"></button>
+    </div>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="relative w-full h-full">
+
+        <!-- 💡 [도입부] 히어로 섹션 -->
+        <section id="hero" class="page-section active flex flex-col justify-center items-center px-4 sm:px-6 lg:px-16 text-center">
+            <!-- 💡 한 톤 밝고 모서리가 둥글며 그림자가 적용된 카드 레이아웃 -->
+            <div class="max-w-4xl w-full mx-auto bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-16 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 space-y-6 transition-all duration-500">
+                <span class="inline-block border border-charcoal/20 dark:border-sand/20 px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] text-charcoal/60 dark:text-sand/60 font-semibold bg-sandDark/30 dark:bg-white/5">
+                    Personal Archive & Portfolio
+                </span>
+                
+                <!-- 💡 [요청 사항 완벽 반영] 따옴표 위아래 대칭형 중앙 정렬 및 반응형 2줄 타이틀 디자인 -->
+                <div class="flex flex-col items-center justify-center py-2 space-y-3 sm:space-y-4">
+                    <!-- 위쪽 큰따옴표 -->
+                    <span class="font-serif text-4xl sm:text-6xl text-charcoal/30 dark:text-sand/30 leading-none select-none">“</span>
+                    
+                    <!-- 본문 타이틀 (모바일/PC 창 크기에 맞추어 크기가 자연스럽게 스케일링되며 정확히 두 줄로 유지됨) -->
+                    <h1 class="font-serif text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-charcoal dark:text-sand leading-snug sm:leading-tight md:leading-snug tracking-tight max-w-full">
+                        <span class="inline-block italic underline decoration-charcoal/30 dark:decoration-sand/30 underline-offset-4 sm:underline-offset-8">밈(Meme)친자 오이데</span>
+                        <br class="block">
+                        <span class="inline-block italic underline decoration-charcoal/30 dark:decoration-sand/30 underline-offset-4 sm:underline-offset-8 mt-2 sm:mt-4">개발 지옥에서 누가 돌아왔~게</span>
+                    </h1>
+                    
+                    <!-- 아래쪽 큰따옴표 -->
+                    <span class="font-serif text-4xl sm:text-6xl text-charcoal/30 dark:text-sand/30 leading-none select-none">”</span>
+                </div>
+                
+                <p class="max-w-2xl mx-auto text-sm sm:text-base text-charcoal/60 dark:text-sand/60 leading-relaxed font-light">
+                    안녕하세요. 수많은 정보의 파도 속에서 웃음을 사냥하고,<br class="hidden sm:inline">
+                    오직 귀여움과 재미에 몰입하는 사람입니다.
+                </p>
+                
+                <div class="pt-4">
+                    <button onclick="goToSection(1)" class="bg-charcoal text-sand dark:bg-sand dark:text-charcoal hover:opacity-90 active:scale-95 transition-all px-8 py-3.5 rounded-full text-xs font-semibold tracking-widest uppercase shadow-lg inline-flex items-center gap-2">
+                        더 알아보기 <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 💡 [Part 1] 소개 섹션 -->
+        <section id="about" class="page-section bg-sandDark/10 dark:bg-black/10 flex flex-col justify-center px-4 sm:px-6 lg:px-16 overflow-y-auto no-scrollbar">
+            <!-- 💡 전체 그리드 영역을 우아하고 따뜻한 원-톤 업 카드박스로 포장 -->
+            <div class="max-w-5xl w-full mx-auto bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-[280px] md:max-w-[320px] aspect-[3/4] bg-charcoal/5 dark:bg-white/5 border border-charcoal/10 dark:border-white/10 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center p-4">
+                        <img src="images/20250418_212135.jpg" alt="프로필 이미지" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x533/e6e1d5/1e1e1c?text=My+Photo'">
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 space-y-6">
+                    <div class="space-y-2">
+                        <span class="text-xs uppercase tracking-[0.15em] font-semibold text-charcoal/50 dark:text-sand/50">01 / WHO I AM</span>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal dark:text-sand">안녕하세요, 공준식 입니다</h2>
+                    </div>
+                    
+                    <p class="text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                        평범하지만 조금만 더 천천히, 조금만 더 귀엽게, 조금만 더 재밌게.
+                    </p>
+                    <p class="text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                        인터넷 세상의 위트 넘치는 드립을 수집하며 영감을 얻는 것을 즐깁니다. 
+                        하지만 조금 마이너 할지도.<br><br>난 역시 비주류야 키킥.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-charcoal/10 dark:border-white/10">
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 dark:text-sand/40 uppercase tracking-wider">이메일</span>
+                            <span class="text-sm font-medium text-charcoal dark:text-sand">kongjunsic2@gmail.com</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 dark:text-sand/40 uppercase tracking-wider">위치</span>
+                            <span class="text-sm font-medium text-charcoal dark:text-sand">Suwon, South Korea</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 dark:text-sand/40 uppercase tracking-wider">주요 역할</span>
+                            <span class="text-sm font-medium text-charcoal dark:text-sand">Content Surfer. 즉, 유튜브 보는 백수</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 dark:text-sand/40 uppercase tracking-wider">메이트</span>
+                            <span class="text-sm font-medium text-charcoal dark:text-sand">반려묘 아라 🐾</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 💡 [Part 2] 관심사 섹션 (정교해진 5단 슬라이더) -->
+        <section id="interests" class="page-section relative overflow-hidden flex flex-col justify-between">
+            
+            <!-- 상단 고정 헤더 -->
+            <div class="absolute top-8 left-6 lg:left-16 z-30 space-y-1">
+                <span class="text-[10px] uppercase tracking-[0.15em] font-semibold text-charcoal/50 dark:text-sand/50">02 / MY FAVORITES</span>
+                <h2 class="font-serif text-lg md:text-xl font-bold text-charcoal dark:text-sand">나의 취향</h2>
+            </div>
+
+            <!-- 가로 슬라이더 컨테이너 (총 5장의 슬라이드, w-[500%] 로 5개 분량 균등 분할) -->
+            <div class="flex-1 w-full relative">
+                <div id="slides-wrapper" class="flex w-[500%] h-full transition-transform duration-700 ease-out">
+                    
+                    <!-- 취향 1: 트렌드 웨이브 -->
+                    <div class="slide w-1/5 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 pt-24 pb-20">
+                        <div class="max-w-5xl w-full bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                            <div class="md:col-span-7 space-y-4 text-left">
+                                <span class="text-xs font-semibold tracking-wider text-charcoal/40 dark:text-sand/40 font-serif">TASTE 01</span>
+                                <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal dark:text-sand leading-snug">밈과 콘텐츠 서핑</h3>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    눈을 떠 있는 상태라면 세상에 새로이 태어나는 드립과 트렌드를 관찰합니다. 단순히 킬링타임에 그치지 않고, 왜 대중이 여기에 열광하는지, 어떤 심리적 맥락에서 이 밈이 싹텄는지 행간을 읽어내는 과정은 아주 유쾌한 자극이자 풍부한 기획적 영감의 원천이 됩니다. (저는 전문 릴스, 쇼츠 시청팀의 일원입니다.)
+                                </p>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    정보의 파도 속에서 쓸모 있으면서도 미소 짓게 만드는 소스들을 채집하고 주변인들과 적재적소에 활용하는 것을 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="md:col-span-5 flex justify-center">
+                            <!-- 반짝임 효과를 위한 커스텀 컨테이너 -->
+                                <div class="group relative w-full max-w-[260px] aspect-square rounded-2xl bg-sand dark:bg-charcoal flex items-center justify-center border border-charcoal/5 dark:border-white/5 shadow-inner overflow-hidden cursor-pointer">
+            
+                                <!-- 반짝이는 빛 효과 (Hover 시 작동) -->
+                                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                <div class="absolute inset-0 bg-white/30 skew-x-[30deg] -translate-x-full animate-[shimmer_1.5s_infinite]"></div>
+                                </div>
+                                <!-- "meme" 텍스트 -->
+                                <span class="font-bold text-4xl text-charcoal/20 dark:text-sand/20 tracking-tighter select-none">meme</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 취향 2: 피트 위스키 -->
+                    <div class="slide w-1/5 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 pt-24 pb-20">
+                        <div class="max-w-5xl w-full bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                            <div class="md:col-span-7 space-y-4 text-left">
+                                <span class="text-xs font-semibold tracking-wider text-charcoal/40 dark:text-sand/40 font-serif">TASTE 02</span>
+                                <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal dark:text-sand leading-snug">스모키하고 고요한 피트 위스키</h3>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    저는 피트 위스키를 좋아합니다.
+                                    스모키하고 거친 매력의 피트. 투박하고 강렬한 병원 소독약 냄새라고들 하지만, 전 그보다 강렬하게 다가오는 흙 내음, 이끼 낀 나무가 가득한 숲 내음이 저의 미각과 정신을 사로잡습니다.
+                                </p>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    한 잔에 담긴 오랜 에이징의 가치를 천천히 음미하며, 얽혀있던 머릿속 생각의 매듭을 하나씩 담백하게 풀어냅니다.
+                                    한 번쯤 경험해 보시는 것을 추천합니다. 제 최애는 '옥토모어' 입니다. 야르.
+                                </p>
+                            </div>
+                            <div class="md:col-span-5 flex justify-center">
+                                <!-- 확대 효과가 적용된 컨테이너 -->
+                                <div class="zoom-container w-full max-w-[260px] aspect-square rounded-2xl bg-sand flex items-center justify-center border border-charcoal/5 shadow-inner">
+                                    <!-- IMAGE_INDEX: 6 (취향 2 사진) -->
+                                    <img src="images/octomore.webp" alt="피트 위스키" class="zoom-img w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 취향 3: 헬스 -->
+                    <div class="slide w-1/5 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 pt-24 pb-20">
+                        <div class="max-w-5xl w-full bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                            <div class="md:col-span-7 space-y-4 text-left">
+                                <span class="text-xs font-semibold tracking-wider text-charcoal/40 dark:text-sand/40 font-serif">TASTE 03</span>
+                                <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal dark:text-sand leading-snug">정직한 땀, 헬스</h3>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    저는 혼자 헬스장에 가는 것을 좋아합니다. 이어폰을 꽂고 좋아하는 음악을 들으며 온전히 집중하는 한 시간. 머리에 잡념이 사라지고 땀이 송글송글 맺히며 운동을 하고 나면 작은 걱정들의 생각의 연결고리가 느슨해지는 것을 느낍니다.
+                                </p>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    몸을 정직하게 정렬해 나가는 마음수련이라고 생각하고 출석하는 편입니다.
+                                </p>
+                            </div>
+                            <div class="md:col-span-5 flex justify-center">
+                                <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sand dark:bg-charcoal flex items-center justify-center border border-charcoal/5 dark:border-white/5 shadow-inner overflow-hidden">
+                                    <img src="images/gym.png" alt="헬스" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 취향 4: 게임 -->
+                    <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20">
+                        <div class="max-w-5xl w-full bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                            <div class="md:col-span-7 space-y-4 text-left">
+                                <span class="text-xs font-semibold tracking-wider text-charcoal/40 dark:text-sand/40 font-serif">TASTE 04</span>
+                                <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal dark:text-sand leading-snug">게임</h3>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    제 삶의 많은 부분을 차지한다고 볼 수도 있겠습니다. 저는 게임도 서핑합니다. 여러 게임을 어쩔 땐 찍먹을, 어쩔 땐 푹먹을 합니다. 모바일, 인디게임부터 AAA게임까지 다양하게 먹어보는 편입니다.
+                                </p>
+                                <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                                    게임에 대해서는 각자의 다양한 취향이 있기에 이만 줄이는 대신 게임추천을 드립니다.
+                                </p>
+                                
+                                <!-- 💡 [수정 완료] 추천 게임 가독성을 높이기 위해 가운데 정렬 및 폰트 크기/두께 강조 적용 -->
+                                <div class="text-center py-3 px-4 bg-charcoal/5 dark:bg-white/5 rounded-2xl border border-charcoal/5 dark:border-white/5">
+                                    <span class="block text-sm sm:text-base md:text-lg font-bold text-charcoal dark:text-sand tracking-wide">"It Takes Two"</span>
+                                    <span class="block text-xs sm:text-sm text-charcoal/60 dark:text-sand/60 font-light font-sans mt-1">요거 정말 재미납니다요.</span>
+                                </div>
+                            </div>
+                            <div class="md:col-span-5 flex justify-center">
+                                <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sand dark:bg-charcoal flex items-center justify-center border border-charcoal/5 dark:border-white/5 shadow-inner overflow-hidden">
+                                    <img src="images/ittakestwo.webp" alt="헬스" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 💡 취향 5: 야구 (한화 이글스 전용 오렌지 / 다크모드 시 네이비 블루 테마 적용) -->
+                    <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20 bg-[#FC4E00] dark:bg-[#07111F] text-white transition-colors duration-500">
+                        <!-- 💡 오렌지/남색 배경 위에 유리처럼 부드럽게 얹혀 투과되는 반투명 명품 카드(backdrop-blur) 처리 -->
+                        <div class="max-w-5xl w-full bg-white/10 backdrop-blur-md p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl border border-white/20 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                            <div class="md:col-span-7 space-y-4 text-left">
+                                <span class="text-xs font-semibold tracking-wider text-white/70 font-serif">TASTE 05</span>
+                                <h3 class="font-serif text-2xl md:text-3xl font-bold text-white leading-snug">야구</h3>
+                                <p class="text-xs sm:text-sm text-white/90 leading-relaxed font-light font-sans">
+                                    작년(2025년)부터는 야구를 보고 있습니다. 제가 응원하는 팀은 '한화 이글스'. 처음엔 단순히 연고지를 보고 응원할 팀을 정했지만, 계속 보다 보면 엄청난 매력을 가진 선수들이 참 많습니다.
+                                </p>
+                                <p class="text-xs sm:text-sm text-white/90 leading-relaxed font-light font-sans">
+                                    문현빈 선수 화이팅!                
+                                </p>
+                            </div>
+                            <div class="md:col-span-5 flex justify-center">
+                                <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sand dark:bg-charcoal flex items-center justify-center border border-charcoal/5 dark:border-white/5 shadow-inner overflow-hidden">
+                                    <img src="images/suri.webp" alt="헬스" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+                <!-- 하단 슬라이드 닷(Dot) 인디케이터 (현재 어떤 서브 취향을 감상 중인지 표시 - 5단 규격화 완료) -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-30">
+                <button onclick="goToSlide(0)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-charcoal dark:bg-sand transition-all duration-300" title="Wave"></button>
+                <button onclick="goToSlide(1)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Whisky"></button>
+                <button onclick="goToSlide(2)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Physical"></button>
+                <button onclick="goToSlide(3)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Game"></button>
+                <button onclick="goToSlide(4)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 dark:border-sand/40 bg-transparent transition-all duration-300" title="Baseball"></button>
+            </div>
+            </div>
+        </section>
+
+        <!-- 💡 [Part 3] 반려묘 일상 섹션 (인터랙티브 3단 스택 카드 프레임 탑재) -->
+        <section id="pet" class="page-section bg-sandDark/10 dark:bg-black/10 flex flex-col justify-center px-4 sm:px-6 lg:px-16 overflow-y-auto no-scrollbar">
+            <!-- 💡 소개 섹션처럼 웅장하면서도 균형 잡힌 12열 그리드 명품 레이아웃 포장 -->
+            <div class="max-w-5xl w-full mx-auto bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center transition-all duration-500">
+                
+                <!-- 좌측 열: 고양이 아라 에세이 소개 -->
+                <div class="md:col-span-7 space-y-6 text-left">
+                    <div class="space-y-2">
+                        <span class="text-xs uppercase tracking-[0.15em] font-semibold text-charcoal/50 dark:text-sand/50">03 / MY CAT</span>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal dark:text-sand">여러분 제 고양이 좀 보세요</h2>
+                    </div>
+                    
+                    <div class="bg-sand dark:bg-charcoal border border-charcoal/10 dark:border-white/10 rounded-2xl p-6 shadow-inner space-y-4 transition-all duration-500">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-charcoal/5 dark:bg-white/5 rounded-full flex items-center justify-center border border-charcoal/10 dark:border-white/10">
+                                <i class="fa-solid fa-cat text-lg text-charcoal/50 dark:text-sand/50"></i>
+                            </div>
+                            <h4 class="font-serif text-lg font-bold text-charcoal dark:text-sand">아라냥이 🐾</h4>
+                        </div>
+                        
+                        <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                            "저희 집 고영희 '아라'입니다. 나이는 13살(추정), 1-2세령에 길에서 구조되었어요. 길 생활을 한 것치곤 꽤나 사람을 좋아하고 낯선 사람이 와도 숨지 않는답니다. 나이가 들어 차분한 일상을 즐기지만 아직 건강에는 아무 이상 없어요. 다행이죠?"
+                        </p>
+                        <p class="text-xs sm:text-sm text-charcoal/70 dark:text-sand/70 leading-relaxed font-light font-sans">
+                            "물도 잘 먹고 밥도 잘 먹고 운동은 일절 안 하지만, 매일 밤 침대 맡에서 잘 자라고 골골송 인사를 건네주는 무척 착하고 소중한 반려 가족이랍니다."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 우측 열: 입체 3단 카드 스택 프레임 (클릭으로 순환 멀리건) -->
+                <div class="md:col-span-5 flex flex-col items-center justify-center py-6">
+                    <span class="text-[10px] text-charcoal/40 dark:text-sand/40 uppercase tracking-widest mb-4 inline-flex items-center gap-1.5 font-medium animate-pulse">
+                        <i class="fa-solid fa-pointer"></i> 카드를 클릭해 보세요
+                    </span>
+                    
+                    <!-- 카드 컨테이너 스택 래퍼 -->
+                    <div class="relative w-[280px] h-[340px] cursor-pointer" onclick="cycleCatCards()" title="사진 넘기기">
+                        
+                        <!-- 첫 번째 카드 (아침 햇살) -->
+                        <div id="cat-card-1" class="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-charcoal/10 dark:border-white/10 transition-all duration-500 bg-sand dark:bg-charcoal flex flex-col select-none origin-bottom">
+                            <img src="images/20240506_202141_IMG_2199.JPG" class="w-full h-[78%] object-cover" alt="아침 햇살의 아라" onerror="this.src='https://placehold.co/400x533/e6e1d5/1e1e1c?text=Ara+Photo+1'">
+                            <div class="h-[22%] flex items-center justify-center bg-sandLight dark:bg-charcoalLight border-t border-charcoal/5 dark:border-white/5 px-4 text-center">
+                                <span class="font-serif text-xs font-semibold text-charcoal/80 dark:text-sand/80"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- 두 번째 카드 (선글라스 힙스터) -->
+                        <div id="cat-card-2" class="absolute inset-0 rounded-2xl overflow-hidden shadow-xl border border-charcoal/10 dark:border-white/10 transition-all duration-500 bg-sand dark:bg-charcoal flex flex-col select-none origin-bottom">
+                            <img src="images/20250301_001420.jpg" class="w-full h-[78%] object-cover" alt="힙스터 아라" onerror="this.src='https://placehold.co/400x533/e6e1d5/1e1e1c?text=Ara+Photo+2'">
+                            <div class="h-[22%] flex items-center justify-center bg-sandLight dark:bg-charcoalLight border-t border-charcoal/5 dark:border-white/5 px-4 text-center">
+                                <span class="font-serif text-xs font-semibold text-charcoal/80 dark:text-sand/80"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- 세 번째 카드 (애착 박스) -->
+                        <div id="cat-card-3" class="absolute inset-0 rounded-2xl overflow-hidden shadow-lg border border-charcoal/10 dark:border-white/10 transition-all duration-500 bg-sand dark:bg-charcoal flex flex-col select-none origin-bottom">
+                            <img src="images/20250418_212135.jpg" class="w-full h-[78%] object-cover" alt="박스 사랑 아라" onerror="this.src='https://placehold.co/400x533/e6e1d5/1e1e1c?text=Ara+Photo+3'">
+                            <div class="h-[22%] flex items-center justify-center bg-sandLight dark:bg-charcoalLight border-t border-charcoal/5 dark:border-white/5 px-4 text-center">
+                                <span class="font-serif text-xs font-semibold text-charcoal/80 dark:text-sand/80"></span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 💡 [Outro + Footer] 연락처 및 바닥글 병합 섹션 (처음으로 돌아가기 기능 적용) -->
+        <section id="contact" class="page-section flex flex-col justify-between pt-24 pb-8 px-4 sm:px-6 lg:px-16 text-center overflow-y-auto no-scrollbar">
+            <!-- 💡 감사/소통 유도 박스를 은은하고 둥글게 래핑 -->
+            <div class="my-auto max-w-xl w-full mx-auto bg-sandLight dark:bg-charcoalLight p-6 sm:p-10 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl/40 border border-charcoal/5 dark:border-white/5 space-y-6 transition-all duration-500">
+                <span class="text-xs uppercase tracking-[0.15em] font-semibold text-charcoal/50 dark:text-sand/50">04 / THANK YOU</span>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal dark:text-sand">SSAFY 야-호~</h2>
+                <p class="text-sm text-charcoal/60 dark:text-sand/60 font-sans">
+                    제가 흥미롭거나 재미있는 대화를 나누고 싶다면 언제든 편하게 연락해 주세요. <br>반모 가능하시세요. 맛떼루용~
+                </p>
+
+                <div class="flex flex-col gap-3 max-w-xs mx-auto pt-4">
+                    <a href="mailto:kongjunsic2@gmail.com" class="border border-charcoal/20 dark:border-sand/20 hover:bg-charcoal hover:text-sand dark:hover:bg-sand dark:hover:text-charcoal transition-all py-3.5 rounded-full text-xs font-semibold tracking-widest uppercase flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-envelope"></i> 이메일로 오이데
+                    </a>
+                    
+                    <!-- 💡 최상단(히어로)으로 부드럽게 돌아가는 인터랙티브 버튼 -->
+                    <button onclick="goToSection(0)" class="border border-charcoal/20 dark:border-sand/20 bg-charcoal/5 dark:bg-white/5 hover:bg-charcoal hover:text-sand dark:hover:bg-sand dark:hover:text-charcoal transition-all py-3.5 rounded-full text-xs font-semibold tracking-widest uppercase flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-arrow-up text-[10px]"></i> 처음으로 돌아가기
+                    </button>
+                    
+                    <div class="flex justify-center gap-6 pt-2 text-lg text-charcoal/60 dark:text-sand/60">
+                        <a href="#" class="hover:text-charcoal dark:hover:text-sand transition-colors" title="Github 링크"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="hover:text-charcoal dark:hover:text-sand transition-colors" title="Instagram 링크"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="hover:text-charcoal dark:hover:text-sand transition-colors" title="Blog 링크"><i class="fa-solid fa-globe"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 푸터 영역 -->
+            <footer class="text-center text-[11px] text-charcoal/40 dark:text-sand/40 space-y-2 mt-8">
+                <p class="font-serif text-xs font-medium tracking-widest text-charcoal/60 dark:text-sand/60 uppercase">ARCHIVE OF MY TASTE</p>
+                <p class="max-w-md mx-auto font-light leading-relaxed font-sans">
+                    본 사이트는 피트 향 위스키와 인터넷 밈, 그리고 고양이를 사랑하는 개인의 온전한 기록이자 자기소개를 위해 제작되었습니다.
+                </p>
+                <p class="text-[10px] text-charcoal/30 dark:text-sand/30">&copy; 2026 Archive of My Taste. All Rights Reserved.</p>
+            </footer>
+        </section>
+
+    </main>
+
+    <!-- 인터랙티브 페이드 트랜지션 및 서브 가로 스크롤 구동 스크립트 -->
+    <script>
+        const sections = document.querySelectorAll('.page-section');
+        const dots = document.querySelectorAll('.nav-dot');
+        const slideDots = document.querySelectorAll('.slide-dot');
+        const slidesWrapper = document.getElementById('slides-wrapper');
+        
+        let currentIndex = 0;
+        let previousIndex = 0;
+        let currentSlideIndex = 0; // Part 2용 서브 슬라이드 인덱스 (0 ~ 4)
+        const TOTAL_SLIDES = 5;    // 슬라이드 개수가 5개로 정립됨에 따른 한계치 정의
+        let isTransitioning = false; // 연속 스크롤 입력 제어용 락 장치
+
+        // 💡 다크모드/라이트모드 수동 토글 장치
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // 💡 초기 테마 상태 로딩 (로컬스토리지 혹은 시스템 설정 반영)
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // 우측 네비게이션 도트 업데이트
+        function updateIndicators(index) {
+            dots.forEach((dot, idx) => {
+                if (idx === index) {
+                    dot.classList.add('bg-charcoal', 'dark:bg-sand', 'scale-125');
+                    dot.classList.remove('bg-transparent');
+                } else {
+                    dot.classList.remove('bg-charcoal', 'dark:bg-sand', 'scale-125');
+                    dot.classList.add('bg-transparent');
+                }
+            });
+        }
+
+        // Part 2 하단 슬라이드 미니 닷 업데이트 (5개 점)
+        function updateSlideIndicators() {
+            slideDots.forEach((dot, idx) => {
+                if (idx === currentSlideIndex) {
+                    dot.classList.add('bg-charcoal', 'dark:bg-sand', 'scale-125');
+                    dot.classList.remove('bg-transparent');
+                } else {
+                    dot.classList.remove('bg-charcoal', 'dark:bg-sand', 'scale-125');
+                    dot.classList.add('bg-transparent');
+                }
+            });
+        }
+
+        // 가로 슬라이더 실제 위치 조절 (5개 구역에 완벽 최적화: 100 / 5 = 20% 폭)
+        function updateSlidesPosition(animate = true) {
+            if (!slidesWrapper) return;
+            if (animate) {
+                slidesWrapper.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+            } else {
+                slidesWrapper.style.transition = 'none';
+            }
+            const offset = -currentSlideIndex * 20; // 5개 슬라이드로, 각각 정확히 20% 간격을 차지함
+            slidesWrapper.style.transform = `translateX(${offset}%)`;
+        }
+
+        // 특정 슬라이드로의 즉각 이동 (수동 제어)
+        function goToSlide(slideIndex) {
+            if (isTransitioning || slideIndex < 0 || slideIndex >= TOTAL_SLIDES) return;
+            
+            isTransitioning = true;
+            currentSlideIndex = slideIndex;
+            updateSlidesPosition(true);
+            updateSlideIndicators();
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }
+
+        // 메인 세로 구역 페이드 아웃/인 이동
+        function goToSection(index) {
+            if (isTransitioning || index < 0 || index >= sections.length || index === currentIndex) return;
+            
+            isTransitioning = true;
+            previousIndex = currentIndex;
+
+            // 현재 아웃 액티브 비활성
+            sections[currentIndex].classList.remove('active');
+
+            // 새로운 인덱스 적용 및 업데이트
+            currentIndex = index;
+            sections[currentIndex].classList.add('active');
+            updateIndicators(currentIndex);
+
+            // 2번째 섹션에 진입할 때의 슬라이더 동적 시작점 제어 (처음 유입 vs 아래에서 역류)
+            if (currentIndex === 2) {
+                currentSlideIndex = (previousIndex < 2) ? 0 : (TOTAL_SLIDES - 1);
+                updateSlidesPosition(false); // 즉시 배치하여 잔상을 없앱니다.
+                updateSlideIndicators();
+            }
+
+            // 트랜지션 애니메이션 속도에 맞춘 락 해제
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }
+
+        // 마우스 휠 감지 (Part 2에서는 가로 스크롤 먼저 소화하고 가로 한계 도달 시 섹션 이동)
+        window.addEventListener('wheel', (e) => {
+            if (isTransitioning) return;
+            
+            if (e.deltaY > 50) {
+                // 아래로 스크롤
+                if (currentIndex === 2) {
+                    if (currentSlideIndex < (TOTAL_SLIDES - 1)) {
+                        goToSlide(currentSlideIndex + 1);
+                    } else {
+                        goToSection(currentIndex + 1);
+                    }
+                } else {
+                    goToSection(currentIndex + 1);
+                }
+            } else if (e.deltaY < -50) {
+                // 위로 스크롤
+                if (currentIndex === 2) {
+                    if (currentSlideIndex > 0) {
+                        goToSlide(currentSlideIndex - 1);
+                    } else {
+                        goToSection(currentIndex - 1);
+                    }
+                } else {
+                    goToSection(currentIndex - 1);
+                }
+            }
+        });
+
+        // 키보드 방향키 제어
+        window.addEventListener('keydown', (e) => {
+            if (isTransitioning) return;
+
+            if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight') {
+                if (currentIndex === 2) {
+                    if (currentSlideIndex < (TOTAL_SLIDES - 1)) {
+                        goToSlide(currentSlideIndex + 1);
+                    } else {
+                        goToSection(currentIndex + 1);
+                    }
+                } else {
+                    goToSection(currentIndex + 1);
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') {
+                if (currentIndex === 2) {
+                    if (currentSlideIndex > 0) {
+                        goToSlide(currentSlideIndex - 1);
+                    } else {
+                        goToSection(currentIndex - 1);
+                    }
+                } else {
+                    goToSection(currentIndex - 1);
+                }
+            }
+        });
+
+        // 모바일 터치 스위프 제어
+        let touchStartY = 0;
+        let touchStartX = 0;
+        window.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (isTransitioning) return;
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaY = touchStartY - touchEndY;
+            const deltaX = touchStartX - touchEndX;
+            const threshold = 60; // 스위프 인식 감도 장벽
+
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+
+            if (currentIndex === 2) {
+                if (deltaY > threshold || (isHorizontalSwipe && deltaX > threshold)) {
+                    if (currentSlideIndex < (TOTAL_SLIDES - 1)) {
+                        goToSlide(currentSlideIndex + 1);
+                    } else {
+                        goToSection(currentIndex + 1);
+                    }
+                } else if (deltaY < -threshold || (isHorizontalSwipe && deltaX < -threshold)) {
+                    if (currentSlideIndex > 0) {
+                        goToSlide(currentSlideIndex - 1);
+                    } else {
+                        goToSection(currentIndex - 1);
+                    }
+                }
+            } else {
+                if (deltaY > threshold) {
+                    goToSection(currentIndex + 1);
+                } else if (deltaY < -threshold) {
+                    goToSection(currentIndex - 1);
+                }
+            }
+        }, { passive: true });
+
+        // ==========================================
+        // 💡 [신규 탑재] 고양이 카드 멀리건 스택 로직
+        // ==========================================
+        let catCardIndex = 0;
+        const catCards = [];
+        let isCardTransitioning = false;
+
+        function initCatCards() {
+            catCards.push(document.getElementById('cat-card-1'));
+            catCards.push(document.getElementById('cat-card-2'));
+            catCards.push(document.getElementById('cat-card-3'));
+            arrangeCatCards();
+        }
+
+        function arrangeCatCards() {
+            const topIdx = catCardIndex;
+            const midIdx = (catCardIndex + 1) % 3;
+            const botIdx = (catCardIndex + 2) % 3;
+
+            // 1st Card: 최상단 (활성 클릭 가능)
+            catCards[topIdx].style.transform = 'translateY(0px) scale(1) rotate(0deg)';
+            catCards[topIdx].style.zIndex = '30';
+            catCards[topIdx].style.opacity = '1';
+            catCards[topIdx].style.pointerEvents = 'auto';
+
+            // 2nd Card: 중간 (은은한 뒤집힘)
+            catCards[midIdx].style.transform = 'translateY(10px) scale(0.95) rotate(-3deg)';
+            catCards[midIdx].style.zIndex = '20';
+            catCards[midIdx].style.opacity = '0.9';
+            catCards[midIdx].style.pointerEvents = 'none';
+
+            // 3rd Card: 최하단 (조금 더 뒤집힘)
+            catCards[botIdx].style.transform = 'translateY(20px) scale(0.9) rotate(4deg)';
+            catCards[botIdx].style.zIndex = '10';
+            catCards[botIdx].style.opacity = '0.8';
+            catCards[botIdx].style.pointerEvents = 'none';
+        }
+
+        function cycleCatCards() {
+            if (isCardTransitioning) return;
+            isCardTransitioning = true;
+
+            const topCard = catCards[catCardIndex];
+
+            // 우측 위로 자연스럽게 던지는 듯한 트랜지션 연출
+            topCard.style.transform = 'translateX(130%) translateY(-30px) rotate(18deg) scale(0.95)';
+            topCard.style.opacity = '0';
+            topCard.style.zIndex = '40';
+
+            setTimeout(() => {
+                // 현재 상위 인덱스 순환
+                catCardIndex = (catCardIndex + 1) % 3;
+                arrangeCatCards();
+
+                isCardTransitioning = false;
+            }, 450); // 날아가는데 걸리는 시간 매치
+        }
+
+        // 초기화 로드
+        window.addEventListener('DOMContentLoaded', () => {
+            initCatCards();
+        });
+    </script>
+</body>
+</html>
