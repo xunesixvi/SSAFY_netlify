@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko" class="overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 차분한 아카이브 | 자기소개</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: 에디토리얼 명조(Noto Serif KR)와 정갈한 고딕(Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 아이콘 라이브러리 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: '#1E1E1C',       /* 피트 차콜 (주조색) */
+                        sand: '#F5F2EB',           /* 샌드 베이지 (배경색) */
+                        sandDark: '#E6E1D5',       /* 조금 더 어두운 베이지 */
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif KR"', 'serif'],
+                        sans: ['Inter', '"Noto Sans KR"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 화면을 가득 채우며 페이드 전환되는 효과 정의 */
+        .page-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: scale(0.98) translateY(10px);
+            z-index: 10;
+        }
+        
+        .page-section.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 20;
+        }
+
+        /* 스크롤바 숨기기 (내부 스크롤 대비) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 가로 슬라이드용 추가 트랜지션 */
+        #slides-wrapper {
+            will-change: transform;
+        }
+    </style>
+</head>
+<body class="bg-sand text-charcoal font-sans selection:bg-charcoal selection:text-sand overflow-hidden h-screen w-screen relative">
+
+    <!-- 💡 [Part 1: UI 구성] 오른쪽 사이드 도트 인디케이터 (세로 메인 섹션 네비게이션) -->
+    <div class="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
+        <button onclick="goToSection(0)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 bg-charcoal transition-all duration-300" title="Intro"></button>
+        <button onclick="goToSection(1)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="About"></button>
+        <button onclick="goToSection(2)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Interests"></button>
+        <button onclick="goToSection(3)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Cozy Room"></button>
+        <button onclick="goToSection(4)" class="nav-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Contact"></button>
+    </div>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="relative w-full h-full">
+
+        <!-- 💡 [도입부] 히어로 섹션 -->
+        <section id="hero" class="page-section active flex flex-col justify-center items-center px-6 lg:px-16 text-center">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <span class="inline-block border border-charcoal/20 px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] text-charcoal/60 font-semibold bg-sandDark/30">
+                    Personal Archive & Portfolio
+                </span>
+                
+                <h1 class="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal leading-tight md:leading-snug">
+                    "<span class="italic underline decoration-charcoal/30 underline-offset-8">밈(Meme)</span>을 즐기고<br>
+                    <span class="italic underline decoration-charcoal/30 underline-offset-8">취향</span>을 아끼는, 조금 특별한 일상 기록"
+                </h1>
+                
+                <p class="max-w-2xl mx-auto text-sm sm:text-base text-charcoal/60 leading-relaxed font-light">
+                    안녕하세요. 수많은 정보의 파도 속에서 웃음을 사냥하고,<br class="hidden sm:inline">
+                    오직 귀여움과 재미에 몰입하는 사람입니다.
+                </p>
+                
+                <div class="pt-6">
+                    <button onclick="goToSection(1)" class="bg-charcoal text-sand hover:opacity-90 transition-all px-8 py-3.5 rounded-full text-xs font-semibold tracking-widest uppercase shadow-lg inline-flex items-center gap-2">
+                        더 알아보기 <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 💡 [Part 1] 소개 섹션 -->
+        <section id="about" class="page-section bg-sandDark/20 flex flex-col justify-center px-6 lg:px-16 overflow-y-auto no-scrollbar">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center py-12">
+                
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-[280px] md:max-w-[320px] aspect-[3/4] bg-charcoal/5 border border-charcoal/10 rounded-2xl overflow-hidden shadow-lg flex items-center justify-center p-4">
+                        <img src="https://placehold.co/400x533/1E1E1C/F5F2EB?text=Profile+Image" alt="프로필 이미지" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x533/e6e1d5/1e1e1c?text=My+Photo'">
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 space-y-6">
+                    <div class="space-y-2">
+                        <span class="text-xs uppercase tracking-[0.15em] font-semibold text-charcoal/50">01 / WHO I AM</span>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">안녕하세요, 공준식 입니다</h2>
+                    </div>
+                    
+                    <p class="text-sm text-charcoal/70 leading-relaxed font-light">
+                        평범하지만 조금만 더 천천히, 조금만 더 귀엽게, 조금만 더 재밌게.
+                    </p>
+                    <p class="text-sm text-charcoal/70 leading-relaxed font-light">
+                        인터넷 세상의 위트 넘치는 드립을 수집하며 영감을 얻는 것을 즐깁니다. 
+                        하지만 조금 마이너 할지도. 난 역시 비주류야 키킥.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-charcoal/10">
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 uppercase tracking-wider">이메일</span>
+                            <span class="text-sm font-medium">kongjunsic2@gmail.com</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 uppercase tracking-wider">위치</span>
+                            <span class="text-sm font-medium">Suwon, South Korea</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 uppercase tracking-wider">주요 역할</span>
+                            <span class="text-sm font-medium">Content Surfer. 즉, 유튜브 보는 백수</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-charcoal/40 uppercase tracking-wider">메이트</span>
+                            <span class="text-sm font-medium">반려묘 아라 🐾</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 💡 [Part 2] 관심사 섹션 (정교해진 5단 슬라이더) -->
+        <section id="interests" class="page-section relative overflow-hidden flex flex-col justify-between">
+            
+            <!-- 상단 고정 헤더 -->
+            <div class="absolute top-8 left-6 lg:left-16 z-30 space-y-1">
+                <span class="text-[10px] uppercase tracking-[0.15em] font-semibold text-charcoal/50">02 / MY FAVORITES</span>
+                <h2 class="font-serif text-lg md:text-xl font-bold text-charcoal">나의 취향</h2>
+            </div>
+
+            <!-- 가로 슬라이더 컨테이너 (총 5장의 슬라이드, w-[500%] 로 5개 분량 균등 분할) -->
+            <div id="slides-wrapper" class="flex w-[500%] h-full transition-transform duration-700 ease-out">
+                
+                <!-- 취향 1: 트렌드 웨이브 -->
+                <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20">
+                    <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+                        <div class="md:col-span-7 space-y-4 text-left">
+                            <span class="text-xs font-semibold tracking-wider text-charcoal/40 font-serif">TASTE 01</span>
+                            <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal leading-snug">밈과 콘텐츠 서핑</h3>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                눈을 떠 있는 상태라면 세상에 새로이 태어나는 드립과 트렌드를 관찰합니다. 단순히 킬링타임에 그치지 않고, 왜 대중이 여기에 열광하는지, 어떤 심리적 맥락에서 이 밈이 싹텄는지 행간을 읽어내는 과정은 아주 유쾌한 자극이자 풍부한 기획적 영감의 원천이 됩니다. (저는 전문 릴스, 쇼츠 시청팀의 일원입니다.)
+                            </p>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                정보의 파도 속에서 쓸모 있으면서도 미소 짓게 만드는 소스들을 채집하고 주변인들과 적재적소에 활용하는 것을 좋아합니다.
+                            </p>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center">
+                            <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sandDark/40 flex items-center justify-center border border-charcoal/5 shadow-inner">
+                                <svg class="w-20 h-20 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 10h18M3 14h18M3 18h18M3 6h18"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 취향 2: 피트 위스키 -->
+                <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20">
+                    <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+                        <div class="md:col-span-7 space-y-4 text-left">
+                            <span class="text-xs font-semibold tracking-wider text-charcoal/40 font-serif">TASTE 02</span>
+                            <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal leading-snug">스모키하고 고요한 피트 위스키</h3>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                저는 피트 위스키를 좋아합니다.
+                                스모키하고 거친 매력의 피트. 투박하고 강렬한 병원 소독약 냄새라고들 하지만, 전 그보다 강렬하게 다가오는 흙 내음, 이끼 낀 나무가 가득한 숲 내음이 저의 미각과 정신을 사로잡습니다.
+                            </p>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                한 잔에 담긴 오랜 에이징의 가치를 천천히 음미하며, 얽혀있던 머릿속 생각의 매듭을 하나씩 담백하게 풀어냅니다.
+                                한 번쯤 경험해 보시는 것을 추천합니다. 제 최애는 '옥토모어' 입니다. 야르.
+                            </p>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center">
+                            <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sandDark/40 flex items-center justify-center border border-charcoal/5 shadow-inner">
+                                <svg class="w-20 h-20 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 2v20M17 5H7a2 2 0 00-2 2v11a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2zM9 10h6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 취향 3: 헬스 -->
+                <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20">
+                    <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+                        <div class="md:col-span-7 space-y-4 text-left">
+                            <span class="text-xs font-semibold tracking-wider text-charcoal/40 font-serif">TASTE 03</span>
+                            <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal leading-snug">정직한 땀, 헬스</h3>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                저는 혼자 헬스장에 가는 것을 좋아합니다. 이어폰을 꽂고 좋아하는 음악을 들으며 온전히 집중하는 한 시간. 머리에 잡념이 사라지고 땀이 송글송글 맺히며 운동을 하고 나면 작은 걱정들의 생각의 연결고리가 느슨해지는 것을 느낍니다.
+                            </p>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                몸을 정직하게 정렬해 나가는 마음수련이라고 생각하고 출석하는 편입니다.
+                            </p>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center">
+                            <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sandDark/40 flex items-center justify-center border border-charcoal/5 shadow-inner">
+                                <svg class="w-20 h-20 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18H4a2 2 0 01-2-2v-4a2 2 0 012-2h2m12 8h2a2 2 0 002-2v-4a2 2 0 00-2-2h-2M6 12h12M9 8h6M9 16h6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 취향 4: 게임 -->
+                <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20">
+                    <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+                        <div class="md:col-span-7 space-y-4 text-left">
+                            <span class="text-xs font-semibold tracking-wider text-charcoal/40 font-serif">TASTE 04</span>
+                            <h3 class="font-serif text-2xl md:text-3xl font-bold text-charcoal leading-snug">게임</h3>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                제 삶의 많은 부분을 차지한다고 볼 수도 있겠습니다. 저는 게임도 서핑합니다. 여러 게임을 어쩔 땐 찍먹을, 어쩔 땐 푹먹을 합니다. 모바일, 인디게임부터 AAA게임까지 다양하게 먹어보는 편입니다.
+                            </p>
+                            <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                                게임에 대해서는 각자의 다양한 취향이 있기에 이만 줄이는 대신 게임추천을 드립니다. "It takes two" 요거 정말 재미납니다요.
+                            </p>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center">
+                            <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-sandDark/40 flex items-center justify-center border border-charcoal/5 shadow-inner">
+                                <svg class="w-20 h-20 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 11h.01M15 11h.01M9 11v2m0 0v2m0-2h2m-2 0H7m11-3v8a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h8a2 2 0 012 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 💡 취향 5: 야구 (한화 이글스 전용 오렌지 컬러 테마 적용) -->
+                <div class="slide w-1/5 h-full flex flex-col md:flex-row items-center justify-center px-6 lg:px-16 pt-24 pb-20 bg-[#FC4E00] text-white transition-colors duration-500">
+                    <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+                        <div class="md:col-span-7 space-y-4 text-left">
+                            <span class="text-xs font-semibold tracking-wider text-white/70 font-serif">TASTE 05</span>
+                            <h3 class="font-serif text-2xl md:text-3xl font-bold text-white leading-snug">야구</h3>
+                            <p class="text-xs sm:text-sm text-white/90 leading-relaxed font-light">
+                                작년(2025년)부터는 야구를 보고 있습니다. 제가 응원하는 팀은 '한화 이글스'. 처음엔 단순히 연고지를 보고 응원할 팀을 정했지만, 계속 보다 보면 엄청난 매력을 가진 선수들이 참 많습니다.
+                            </p>
+                            <p class="text-xs sm:text-sm text-white/90 leading-relaxed font-light">
+                                문현빈 선수 화이팅!                
+                            </p>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center">
+                            <!-- 오렌지 구단 컬러와 대비되는 고급스러운 야구 가죽 패치 느낌의 구형 SVG 아이콘 -->
+                            <div class="w-full max-w-[260px] aspect-square rounded-2xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+                                <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- 야구공 형상의 둥근 곡선 패턴 표현 -->
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.2"></circle>
+                                    <path d="M6 18c2.5-3 2.5-9 0-12" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2"></path>
+                                    <path d="M18 18c-2.5-3-2.5-9 0-12" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 슬라이드 닷(Dot) 인디케이터 (현재 어떤 서브 취향을 감상 중인지 표시 - 5단 규격화 완료) -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-30">
+                <button onclick="goToSlide(0)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 bg-charcoal transition-all duration-300" title="Wave"></button>
+                <button onclick="goToSlide(1)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Whisky"></button>
+                <button onclick="goToSlide(2)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Physical"></button>
+                <button onclick="goToSlide(3)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Game"></button>
+                <button onclick="goToSlide(4)" class="slide-dot w-2 h-2 rounded-full border border-charcoal/40 bg-transparent transition-all duration-300" title="Baseball"></button>
+            </div>
+        </section>
+
+        <!-- 💡 [Part 3] 반려묘 일상 섹션 -->
+        <section id="pet" class="page-section bg-sandDark/20 flex flex-col justify-center px-6 lg:px-16 overflow-y-auto no-scrollbar">
+            <div class="max-w-xl mx-auto space-y-6 py-12">
+                <span class="text-xs uppercase tracking-[0.15em] font-semibold text-charcoal/50">03 / CAT</span>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">여러분 제 고양이 좀 보세요</h2>
+                
+                <div class="bg-sand border border-charcoal/10 rounded-2xl p-6 shadow-sm space-y-4">
+                    <div class="w-20 h-20 bg-charcoal/5 mx-auto rounded-full flex items-center justify-center border border-charcoal/10 overflow-hidden">
+                        <i class="fa-solid fa-cat text-3xl text-charcoal/40"></i>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <h4 class="font-serif text-lg font-bold">아라냥이 🐾</h4>
+                        <p class="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+                            "저희 집 고영희 '아라'입니다. 나이는 13살(추정), 1-2세령에 길에서 구조되었어요. 길 생활을 한 것치곤 꽤나 사람을 좋아하고 낯선 사람이 와도 숨지 않는답니다. 나이가 들어 차분한 일상을 즐기지만 아직 건강에는 아무 이상 없어요. 다행이죠? 물도 잘 먹고 밥도 잘 먹고 운동은 안 하지만 매일 밤 잘 자라고 인사해 주는 착한 고양이입니다."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 💡 [Outro + Footer] 연락처 및 바닥글 병합 섹션 (처음으로 돌아가기 기능 적용) -->
+        <section id="contact" class="page-section flex flex-col justify-between pt-24 pb-8 px-6 lg:px-16 text-center overflow-y-auto no-scrollbar">
+            <div class="my-auto max-w-xl mx-auto space-y-6">
+                <span class="text-xs uppercase tracking-[0.15em] font-semibold text-charcoal/50">04 / THANK YOU</span>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">SSAFY 야-호~</h2>
+                <p class="text-sm text-charcoal/60">
+                    제가 흥미롭거나 재미있는 대화를 나누고 싶다면 언제든 편하게 연락해 주세요. 반모 가능하시세요.
+                </p>
+
+                <div class="flex flex-col gap-3 max-w-xs mx-auto pt-4">
+                    <a href="mailto:kongjunsic2@gmail.com" class="border border-charcoal/20 hover:bg-charcoal hover:text-sand transition-all py-3.5 rounded-full text-xs font-semibold tracking-widest uppercase flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-envelope"></i> 이메일로 연락하기
+                    </a>
+                    
+                    <!-- 💡 최상단(히어로)으로 부드럽게 돌아가는 인터랙티브 버튼 -->
+                    <button onclick="goToSection(0)" class="border border-charcoal/20 bg-charcoal/5 hover:bg-charcoal hover:text-sand transition-all py-3.5 rounded-full text-xs font-semibold tracking-widest uppercase flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-arrow-up text-[10px]"></i> 처음으로 돌아가기
+                    </button>
+                    
+                    <div class="flex justify-center gap-6 pt-2 text-lg text-charcoal/60">
+                        <a href="#" class="hover:text-charcoal transition-colors" title="Github 링크"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="hover:text-charcoal transition-colors" title="Instagram 링크"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="hover:text-charcoal transition-colors" title="Blog 링크"><i class="fa-solid fa-globe"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 푸터 영역 -->
+            <footer class="text-center text-[11px] text-charcoal/40 space-y-2 mt-8">
+                <p class="font-serif text-xs font-medium tracking-widest text-charcoal/60 uppercase">ARCHIVE OF MY TASTE</p>
+                <p class="max-w-md mx-auto font-light leading-relaxed">
+                    본 사이트는 피트 향 위스키와 인터넷 밈, 그리고 고양이를 사랑하는 개인의 온전한 기록이자 자기소개를 위해 제작되었습니다.
+                </p>
+                <p class="text-[10px] text-charcoal/30">&copy; 2026 Archive of My Taste. All Rights Reserved.</p>
+            </footer>
+        </section>
+
+    </main>
+
+    <!-- 인터랙티브 페이드 트랜지션 및 서브 가로 스크롤 구동 스크립트 -->
+    <script>
+        const sections = document.querySelectorAll('.page-section');
+        const dots = document.querySelectorAll('.nav-dot');
+        const slideDots = document.querySelectorAll('.slide-dot');
+        const slidesWrapper = document.getElementById('slides-wrapper');
+        
+        let currentIndex = 0;
+        let previousIndex = 0;
+        let currentSlideIndex = 0; // Part 2용 서브 슬라이드 인덱스 (0 ~ 4)
+        const TOTAL_SLIDES = 5;    // 슬라이드 개수가 5개로 정립됨에 따른 한계치 정의
+        let isTransitioning = false; // 연속 스크롤 입력 제어용 락 장치
+
+        // 우측 네비게이션 도트 업데이트
+        function updateIndicators(index) {
+            dots.forEach((dot, idx) => {
+                if (idx === index) {
+                    dot.classList.add('bg-charcoal', 'scale-125');
+                    dot.classList.remove('bg-transparent');
+                } else {
+                    dot.classList.remove('bg-charcoal', 'scale-125');
+                    dot.classList.add('bg-transparent');
+                }
+            });
+        }
+
+        // Part 2 하단 슬라이드 미니 닷 업데이트 (5개 점)
+        function updateSlideIndicators() {
+            slideDots.forEach((dot, idx) => {
+                if (idx === currentSlideIndex) {
+                    dot.classList.add('bg-charcoal', 'scale-125');
+                    dot.classList.remove('bg-transparent');
+                } else {
+                    dot.classList.remove('bg-charcoal', 'scale-125');
+                    dot.classList.add('bg-transparent');
+                }
+            });
+        }
+
+        // 가로 슬라이더 실제 위치 조절 (5개 구역에 완벽 최적화: 100 / 5 = 20% 폭)
+        function updateSlidesPosition(animate = true) {
+            if (!slidesWrapper) return;
+            if (animate) {
+                slidesWrapper.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+            } else {
+                slidesWrapper.style.transition = 'none';
+            }
+            const offset = -currentSlideIndex * 20; // 5개 슬라이드로, 각각 정확히 20% 간격을 차지함
+            slidesWrapper.style.transform = `translateX(${offset}%)`;
+        }
+
+        // 특정 슬라이드로의 즉각 이동 (수동 제어)
+        function goToSlide(slideIndex) {
+            if (isTransitioning || slideIndex < 0 || slideIndex >= TOTAL_SLIDES) return;
+            
+            isTransitioning = true;
+            currentSlideIndex = slideIndex;
+            updateSlidesPosition(true);
+            updateSlideIndicators();
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }
+
+        // 메인 세로 구역 페이드 아웃/인 이동
+        function goToSection(index) {
+            if (isTransitioning || index < 0 || index >= sections.length || index === currentIndex) return;
+            
+            isTransitioning = true;
+            previousIndex = currentIndex;
+
+            // 현재 아웃 액티브 비활성
+            sections[currentIndex].classList.remove('active');
+
+            // 새로운 인덱스 적용 및 업데이트
+            currentIndex = index;
+            sections[currentIndex].classList.add('active');
+            updateIndicators(currentIndex);
+
+            // 2번째 섹션에 진입할 때의 슬라이더 동적 시작점 제어 (처음 유입 vs 아래에서 역류)
+            if (currentIndex === 2) {
+                currentSlideIndex = (previousIndex < 2) ? 0 : (TOTAL_SLIDES - 1);
+                updateSlidesPosition(false); // 즉시 배치하여 잔상을 없앱니다.
+                updateSlideIndicators();
+            }
+
+            // 트랜지션 애니메이션 속도에 맞춘 락 해제
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }
+
+        // 마우스 휠 감지 (Part 2에서는 가로 스크롤 먼저 소화하고 가로 한계 도달 시 섹션 이동)
+        window.addEventListener('wheel', (e) => {
+            if (isTransitioning) return;
+            
+            if (e.deltaY > 50) {
+                // 아래로 스크롤
+                if (currentIndex === 2) {
+                    if (currentSlideIndex < (TOTAL_SLIDES - 1)) {
+                        goToSlide(currentSlideIndex + 1);
+                    } else {
+                        goToSection(currentIndex + 1);
+                    }
+                } else {
+                    goToSection(currentIndex + 1);
+                }
+            } else if (e.deltaY < -50) {
+                // 위로 스크롤
+                if (currentIndex === 2) {
+                    if (currentSlideIndex > 0) {
+                        goToSlide(currentSlideIndex - 1);
+                    } else {
+                        goToSection(currentIndex - 1);
+                    }
+                } else {
+                    goToSection(currentIndex - 1);
+                }
+            }
+        });
+
+        // 키보드 방향키 제어
+        window.addEventListener('keydown', (e) => {
+            if (isTransitioning) return;
+
+            if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight') {
+                if (currentIndex === 2) {
+                    if (currentSlideIndex < (TOTAL_SLIDES - 1)) {
+                        goToSlide(currentSlideIndex + 1);
+                    } else {
+                        goToSection(currentIndex + 1);
+                    }
+                } else {
+                    goToSection(currentIndex + 1);
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') {
+                if (currentIndex === 2) {
+                    if (currentSlideIndex > 0) {
+                        goToSlide(currentSlideIndex - 1);
+                    } else {
+                        goToSection(currentIndex - 1);
+                    }
+                } else {
+                    goToSection(currentIndex - 1);
+                }
+            }
+        });
+
+        // 모바일 터치 스위프 제어
+        let touchStartY = 0;
+        let touchStartX = 0;
+        window.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (isTransitioning) return;
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaY = touchStartY - touchEndY;
+            const deltaX = touchStartX - touchEndX;
+            const threshold = 60; // 스위프 인식 감도 장벽
+
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+
+            if (currentIndex === 2) {
+                if (deltaY > threshold || (isHorizontalSwipe && deltaX > threshold)) {
+                    if (currentSlideIndex < (TOTAL_SLIDES - 1)) {
+                        goToSlide(currentSlideIndex + 1);
+                    } else {
+                        goToSection(currentIndex + 1);
+                    }
+                } else if (deltaY < -threshold || (isHorizontalSwipe && deltaX < -threshold)) {
+                    if (currentSlideIndex > 0) {
+                        goToSlide(currentSlideIndex - 1);
+                    } else {
+                        goToSection(currentIndex - 1);
+                    }
+                }
+            } else {
+                if (deltaY > threshold) {
+                    goToSection(currentIndex + 1);
+                } else if (deltaY < -threshold) {
+                    goToSection(currentIndex - 1);
+                }
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
